@@ -1,8 +1,9 @@
+# Compiled Java Files
+*.class
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
-
-*.class
 
 # Folder config file
 Desktop.ini
@@ -28,7 +29,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -43,3 +45,4 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+/bin/
