@@ -1,3 +1,7 @@
+# Project Folder
+data/
+bin/
+
 # Compiled Java Files
 *.class
 
@@ -45,4 +49,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-/bin/
