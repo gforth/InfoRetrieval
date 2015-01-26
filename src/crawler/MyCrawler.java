@@ -23,7 +23,7 @@ public class MyCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(WebURL url) {
             String href = url.getURL().toLowerCase();
-            return !FILTERS.matcher(href).matches() && href.startsWith("http://www.ics.uci.edu/");
+            return !FILTERS.matcher(href).matches() && href.contains("ics.uci.edu");
     }
 
     /**
@@ -33,6 +33,9 @@ public class MyCrawler extends WebCrawler {
     @Override
     public void visit(Page page) {          
             String url = page.getWebURL().getURL();
+            int domainStartIdx = url.indexOf("//") + 2;
+            int domainEndIdx = url.indexOf('/', domainStartIdx);
+            String subDomain = url.substring(domainStartIdx, domainEndIdx);
             System.out.println("URL: " + url);
 
             if (page.getParseData() instanceof HtmlParseData) {
