@@ -55,6 +55,9 @@ public class Controller {
     		computedDomains.add(domainsList.get(i));
     	}
     	
+    	//Print the size of unique domains
+    	System.out.println(computedDomains.size());
+    	
     	//Print all unique domains
         Iterator<String> it = computedDomains.iterator();
         while ( it.hasNext() ){
