@@ -1,5 +1,10 @@
 package crawler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -15,6 +20,8 @@ public class MyCrawler extends WebCrawler {
                                                       + "|wav|avi|mov|mpeg|ram|m4v|pdf" 
                                                       + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
+    private static int fileNum = 0;
+    private final static String MAPPING_FILENAME = "map.txt";
     /**
      * You should implement this function to specify whether
      * the given url should be crawled or not (based on your
@@ -23,7 +30,10 @@ public class MyCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(WebURL url) {
             String href = url.getURL().toLowerCase();
-            return !FILTERS.matcher(href).matches() && href.contains("ics.uci.edu");
+            return !FILTERS.matcher(href).matches() && href.contains("ics.uci.edu") 
+            		&& !href.contains("calendar.ics.uci.edu")
+            		&& !href.contains("archive.ics.uci.edu")
+            		&& !href.contains("djp3-pc2.ics.uci.edu");
     }
 
     /**
@@ -41,12 +51,38 @@ public class MyCrawler extends WebCrawler {
             if (page.getParseData() instanceof HtmlParseData) {
                     HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
                     String text = htmlParseData.getText();
-                    String html = htmlParseData.getHtml();
-                    List<WebURL> links = htmlParseData.getOutgoingUrls();
-
-                    System.out.println("Text length: " + text.length());
-                    System.out.println("Html length: " + html.length());
-                    System.out.println("Number of outgoing links: " + links.size());
+                    
+                    // store url into mapping file
+                    String mapPath = this.getMyController().getConfig().getCrawlStorageFolder() + "/" + MAPPING_FILENAME;
+					String filePath = this.getMyController().getConfig().getCrawlStorageFolder() + "/" + fileNum;
+                    FileWriter fw;
+					try {
+						fw = new FileWriter(mapPath, true);
+	                    fw.write(fileNum + "\n" + url + '\n');
+	                    fw.close();
+	                    fileNum++;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						System.exit(-1);
+					}
+					
+					// save content
+					try {
+						fw = new FileWriter(filePath);
+						fw.write(text);
+						fw.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						System.exit(-1);
+					}
+//                    String html = htmlParseData.getHtml();
+//                    List<WebURL> links = htmlParseData.getOutgoingUrls();
+                    
+//                    System.out.println("Text length: " + text.length());
+//                    System.out.println("Html length: " + html.length());
+//                    System.out.println("Number of outgoing links: " + links.size());
             }
     }
 }
