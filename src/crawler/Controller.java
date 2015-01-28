@@ -15,7 +15,7 @@ public class Controller {
         config.setCrawlStorageFolder(crawlStorageFolder);
         config.setUserAgentString("UCI WebCrawler 18407504");
         config.setMaxDepthOfCrawling(-1);
-        config.setMaxPagesToFetch(10);
+        config.setMaxPagesToFetch(-1);
         config.setPolitenessDelay(300);
         config.setConnectionTimeout(1000); // set timeout to 1 min
 
