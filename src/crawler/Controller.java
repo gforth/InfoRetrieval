@@ -3,6 +3,7 @@ package crawler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,9 +55,10 @@ public class Controller {
     		computedDomains.add(domainsList.get(i));
     	}
     	
-    	//Print result
-        for (String s : computedDomains){
-        	System.out.println(s);
+    	//Print all unique domains
+        Iterator<String> it = computedDomains.iterator();
+        while ( it.hasNext() ){
+            System.out.println(it.next());
         }
     }
 }
