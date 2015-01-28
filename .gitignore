@@ -1,6 +1,7 @@
 # Project Folder
 data/
 bin/
+answers/
 
 # Compiled Java Files
 *.class
