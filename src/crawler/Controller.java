@@ -17,6 +17,7 @@ public class Controller {
             config.setMaxDepthOfCrawling(-1);
             config.setMaxPagesToFetch(10);
             config.setPolitenessDelay(300);
+            config.setConnectionTimeout(1000); // set timeout to 1 min
 
             /*
              * Instantiate the controller for this crawl.
