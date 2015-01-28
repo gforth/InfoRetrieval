@@ -1,5 +1,12 @@
 package crawler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -38,6 +45,19 @@ public class Controller {
              * will reach the line after this only when crawling is finished.
              */
             controller.start(MyCrawler.class, numberOfCrawlers);    
+    }
+    
+    public static void computeUniqueDomains(List<String> domainsList){
+    	//Compute Unique Domains
+    	Set<String> computedDomains = new HashSet<String>();
+    	for(int i = 0; i < domainsList.size(); i++){
+    		computedDomains.add(domainsList.get(i));
+    	}
+    	
+    	//Print result
+        for (String s : computedDomains){
+        	System.out.println(s);
+        }
     }
 }
 
