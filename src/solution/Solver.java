@@ -3,6 +3,7 @@ package solution;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -17,8 +18,11 @@ public class Solver {
 	
 	public static void main(String[] args) throws Exception {
 		String rootDirName = "./data/crawl/root";
-//    	Q2: Compute unique URLS
-//    	computeUniqueDomains(domainsList);
+		
+    	//Q2: Compute unique URLS
+    	computeUniqueDomains();
+    	
+    	// Q4:
 		Map<Integer, String> map = getFileMapping(rootDirName);
 		String longestPage = getLongestPage(rootDirName, map);
 	}
@@ -57,11 +61,31 @@ public class Solver {
 		return longestPage;
 	}
 	
-    public static void computeUniqueDomains(List<String> domainsList){
+    public static void computeUniqueDomains(){
+		//Read data
+    	List lines = new ArrayList();
+    	
+		try{
+			File file = new File("data/crawl/root/map.txt");
+			lines = FileUtils.readLines(file, "UTF-8");
+		}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+    	
+		List domainsList = new ArrayList();
+		String regex = "\\d+";
+		Iterator<String> it = lines.iterator();
+	    while ( it.hasNext() ){
+	    	String currentIt = it.next();
+	    	if(!currentIt.matches(regex)){
+	    		domainsList.add(currentIt);
+	    	}
+	    }
+		
     	//Compute Unique Domains
     	Set<String> computedDomains = new HashSet<String>();
     	for(int i = 0; i < domainsList.size(); i++){
-    		computedDomains.add(domainsList.get(i));
+    		computedDomains.add((String) domainsList.get(i));
     	}
     	
     	//Create result data
@@ -72,9 +96,9 @@ public class Solver {
 	    textResult += "Total size of unique URLs: " + computedDomains.size() + "\n\n";
     	
     	//Print all unique domains
-        Iterator<String> it = computedDomains.iterator();
-        while ( it.hasNext() ){
-            textResult += it.next() + "\n";
+        Iterator<String> sortedDomain = computedDomains.iterator();
+        while ( sortedDomain.hasNext() ){
+            textResult += sortedDomain.next() + "\n";
         }
         textResult += "\n" + "----- END OF RESULT -----";
         
