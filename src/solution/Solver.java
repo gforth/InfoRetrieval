@@ -23,26 +23,29 @@ public class Solver {
     	computeUniqueDomains();
     	
     	// Q4:
-		Map<Integer, String> map = getFileMapping(rootDirName);
+		Map<String, String> map = getFileMapping(rootDirName);
 		String longestPage = getLongestPage(rootDirName, map);
 	}
 	
-	public static Map<Integer, String> getFileMapping(String folderName) throws Exception {
+	public static Map<String, String> getFileMapping(String folderName) throws Exception {
 		File mapFile = new File(folderName + "/" + MAPPING_FILENAME);
 		List<String> lines = FileUtils.readLines(mapFile);
-		Map<Integer, String> output = new HashMap<Integer, String>();
-		for(int i=0; i<lines.size()-1; i+=2) {
-			if(i%2 == 0) {
-				// file ID
-				if(output.containsKey(lines.get(i))) throw new Exception("Duplicate file ID");
-				
-				output.put(i, lines.get(i+1));
+		Map<String, String> output = new HashMap<String, String>();
+		for(int i=0; i<lines.size(); i+=2) {
+			// file ID
+			String key = lines.get(i);
+			String val = lines.get(i+1);
+			if(output.containsKey(key)) {
+				System.out.println(key);
+				throw new Exception("Duplicate file ID");
 			}
+			
+			output.put(key, val);
 		}
 		return output;
 	}
 	
-	public static String getLongestPage(String folderName, Map<Integer, String> map) throws IOException {
+	public static String getLongestPage(String folderName, Map<String, String> map) throws IOException {
 		int maxWords = -1;
 		String longestPage = null;
 		File[] listOfFiles = new File(folderName).listFiles();
@@ -57,7 +60,7 @@ public class Solver {
 			} 
 		}
 		
-		System.out.println("Longest page id is " + map.get(Integer.parseInt(longestPage)) + " with " + maxWords + " words");
+		System.out.println("Longest page id is " + longestPage + " ( " + map.get(longestPage) + " ) with " + maxWords + " words");
 		return longestPage;
 	}
 	
