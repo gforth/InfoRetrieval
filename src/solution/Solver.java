@@ -2,6 +2,9 @@ package solution;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 
@@ -254,4 +258,52 @@ public class Solver {
 	    
     }
 
+    
+	//*** Supporting methods ***
+	@SuppressWarnings("unchecked")
+	private static void sortByFrequency(String title, Map<String, Integer> frequenciesMap) { 
+		//Convert Map to Array
+		System.out.println("S01 - Start converting Map to Array at " + getCurrentTime());
+	    Object[] frequenciesArray = frequenciesMap.entrySet().toArray();
+	    System.out.println("S01 - End converting Map to Array at " + getCurrentTime());
+	    
+	    System.out.println("S02 - Start sorting by frequency at " + getCurrentTime());
+	    Arrays.sort(frequenciesArray, new Comparator<Object>() {
+			public int compare(Object o1, Object o2) {
+	        	Entry<String, Integer> entry1 = (Map.Entry<String, Integer>) o1;
+				Entry<String, Integer> entry2 = (Map.Entry<String, Integer>) o2;
+				return entry2.getValue().compareTo(entry1.getValue());
+	        }
+	    });
+	    System.out.println("S02 - End sorting by frequency at " + getCurrentTime());
+	    
+	    //Print sorted Map
+	    String textResult = new String();
+	    System.out.println("S03 - Start preparing result string at " + getCurrentTime());
+	    textResult = "### Result of " + title + " by highest to lowest frequency ###\n\n";
+    	textResult += "Total unique subdomains: " + frequenciesMap.size() + "\n\n";
+	    
+	    for (Object e : frequenciesArray) {
+	        Entry<String, Integer> entry = (Map.Entry<String, Integer>) e;
+	        textResult += entry.getKey() + " - " + entry.getValue() + "\n";
+	    }
+	    textResult += "\n----- END OF RESULT -----";
+	    System.out.println("S03 - End preparing result string at " + getCurrentTime());
+	    
+		//Write result to text file
+	    System.out.println("S04 - Start writing result file at " + getCurrentTime());
+		try{
+			File file = new File("result.txt");
+			FileUtils.writeStringToFile(file, textResult);
+			System.out.println("Result is ready!");
+			System.out.println("S04 - End writing result file at " + getCurrentTime());
+		}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}	
+	}
+	
+	private static String getCurrentTime(){
+		String timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+		return timeStamp;
+	}
 }
