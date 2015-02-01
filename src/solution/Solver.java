@@ -27,19 +27,22 @@ public class Solver {
 		String rootDirName = "./data/crawl/root";
 		
     	//Q2: Compute unique URLS
-    	computeUniqueDomains();
+//    	computeUniqueDomains();
+    	
+    	//Q3: Compute subdomain
+    	computeSubdomain();
     	
     	// Q4:
-		Map<String, String> map = getFileMapping(rootDirName);
+//		Map<String, String> map = getFileMapping(rootDirName);
 //		String longestPage = getLongestPage(rootDirName, map);
 		
 		// Q5:
-		int maxMostCommonWords = 100;
-		List<Map.Entry<Token, Integer>> commonWords = getMostCommonTokens(rootDirName, map, maxMostCommonWords);
-		for(int i=0; i<maxMostCommonWords; i++) {
-			Map.Entry<Token, Integer> entry = commonWords.get(i);
-			System.out.println(entry.getKey().getWord() + " : " + entry.getValue());
-		}
+//		int maxMostCommonWords = 100;
+//		List<Map.Entry<Token, Integer>> commonWords = getMostCommonTokens(rootDirName, map, maxMostCommonWords);
+//		for(int i=0; i<maxMostCommonWords; i++) {
+//			Map.Entry<Token, Integer> entry = commonWords.get(i);
+//			System.out.println(entry.getKey().getWord() + " : " + entry.getValue());
+//		}
 	}
 	
 	/**
