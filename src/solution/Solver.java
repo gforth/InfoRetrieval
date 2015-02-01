@@ -153,17 +153,20 @@ public class Solver {
 	}
 	
     public static void computeUniqueDomains(){
+    	//Configurations
+    	String targetedFile = "data/crawl/root/map.txt";
+    	
 		//Read data
-    	List lines = new ArrayList();
+    	List<String> lines = new ArrayList<String>();
     	
 		try{
-			File file = new File("data/crawl/root/map.txt");
+			File file = new File(targetedFile);
 			lines = FileUtils.readLines(file, "UTF-8");
 		}catch (IOException e){
 			System.err.println("Caught IOException: " + e.getMessage());
 		}
     	
-		List domainsList = new ArrayList();
+		List<String> domainsList = new ArrayList<String>();
 		String regex = "(\\d+)(_)(\\d+)";
 		Iterator<String> it = lines.iterator();
 	    while ( it.hasNext() ){
@@ -223,7 +226,7 @@ public class Solver {
     	String targetedFile = "answers/result-q2.txt";
     	
 		//Read domain list
-    	List lines = new ArrayList();
+    	List<String> lines = new ArrayList<String>();
 		try{
 			File file = new File(targetedFile);
 			lines = FileUtils.readLines(file, "UTF-8");
@@ -232,7 +235,7 @@ public class Solver {
 		}
 		
 		//Process subdomain of ics.uci.edu
-		List domainsList = new ArrayList();
+		List<String> domainsList = new ArrayList<String>();
 		String regex = "^https?://(.*)[.]ics[.]uci[.]edu(.*)";
 		Iterator<String> it = lines.iterator();
 	    while ( it.hasNext() ){
@@ -247,7 +250,6 @@ public class Solver {
 	    Map<String, Integer> domainsFrequencies = new HashMap<String, Integer>();
 		for(int i = 0; i < domainsList.size(); i++){
 			String currentDomain = (String) domainsList.get(i);
-			currentDomain = currentDomain;
 			if(domainsFrequencies.containsKey(currentDomain)){
 				int currentFrequency = (int) domainsFrequencies.get(currentDomain);
 				currentFrequency++;
