@@ -2,6 +2,9 @@ package solution;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 
@@ -23,19 +27,22 @@ public class Solver {
 		String rootDirName = "./data/crawl/root";
 		
     	//Q2: Compute unique URLS
-    	computeUniqueDomains();
+//    	computeUniqueDomains();
+    	
+    	//Q3: Compute subdomain
+    	computeSubdomain();
     	
     	// Q4:
-		Map<String, String> map = getFileMapping(rootDirName);
+//		Map<String, String> map = getFileMapping(rootDirName);
 //		String longestPage = getLongestPage(rootDirName, map);
 		
 		// Q5:
-		int maxMostCommonWords = 100;
-		List<Map.Entry<Token, Integer>> commonWords = getMostCommonTokens(rootDirName, map, maxMostCommonWords);
-		for(int i=0; i<maxMostCommonWords; i++) {
-			Map.Entry<Token, Integer> entry = commonWords.get(i);
-			System.out.println(entry.getKey().getWord() + " : " + entry.getValue());
-		}
+//		int maxMostCommonWords = 100;
+//		List<Map.Entry<Token, Integer>> commonWords = getMostCommonTokens(rootDirName, map, maxMostCommonWords);
+//		for(int i=0; i<maxMostCommonWords; i++) {
+//			Map.Entry<Token, Integer> entry = commonWords.get(i);
+//			System.out.println(entry.getKey().getWord() + " : " + entry.getValue());
+//		}
 	}
 	
 	/**
@@ -212,7 +219,112 @@ public class Solver {
     }
     
     public static void computeSubdomain(){
+    	//Configurations
+    	String targetedFile = "answers/result-q2.txt";
     	
+		//Read domain list
+    	List lines = new ArrayList();
+		try{
+			File file = new File(targetedFile);
+			lines = FileUtils.readLines(file, "UTF-8");
+		}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+		
+		//Process subdomain of ics.uci.edu
+		List domainsList = new ArrayList();
+		String regex = "^https?://([a-z0-9]+[.])*ics[.]uci[.]edu(.+)";
+		Iterator<String> it = lines.iterator();
+	    while ( it.hasNext() ){
+	    	String currentIt = it.next();
+	    	if(currentIt.matches(regex)){
+	    		currentIt = currentIt.split("ics.uci.edu")[0] + "ics.uci.edu";
+	    		domainsList.add(currentIt);
+	    	}
+	    }
+	    
+	    //Process frequency of subdomain
+	    Map<String, Integer> domainsFrequencies = new HashMap<String, Integer>();
+		for(int i = 0; i < domainsList.size(); i++){
+			String currentDomain = (String) domainsList.get(i);
+			currentDomain = currentDomain;
+			if(domainsFrequencies.containsKey(currentDomain)){
+				int currentFrequency = (int) domainsFrequencies.get(currentDomain);
+				currentFrequency++;
+				domainsFrequencies.put(currentDomain, currentFrequency);
+			}else{
+				//If there is no token in the hashmap, add new
+				domainsFrequencies.put(currentDomain, 1);
+			}
+		}
+		
+		sortByFrequency("Subdomains", domainsFrequencies);
+	    
     }
 
+    
+	//*** Supporting methods ***
+	@SuppressWarnings("unchecked")
+	private static void sortByFrequency(String title, Map<String, Integer> frequenciesMap) { 
+		//Convert Map to Array
+		System.out.println("S01 - Start converting Map to Array at " + getCurrentTime());
+	    Object[] frequenciesArray = frequenciesMap.entrySet().toArray();
+	    System.out.println("S01 - End converting Map to Array at " + getCurrentTime());
+	    
+	    System.out.println("S02 - Start sorting by frequency at " + getCurrentTime());
+	    Arrays.sort(frequenciesArray, new Comparator<Object>() {
+			public int compare(Object o1, Object o2) {
+	        	Entry<String, Integer> entry1 = (Map.Entry<String, Integer>) o1;
+				Entry<String, Integer> entry2 = (Map.Entry<String, Integer>) o2;
+				return entry2.getValue().compareTo(entry1.getValue());
+	        }
+	    });
+	    System.out.println("S02 - End sorting by frequency at " + getCurrentTime());
+	    
+	    //Create text result variable
+	    String textResultHeader = new String();
+	    String textResultFooter = new String();
+	    
+    	//Create file
+    	File file = new File("answers/Subdomains.txt");
+
+    	//Print the size of unique subdomains
+	    System.out.println("S03 - Start printing result header at " + getCurrentTime());
+	    textResultHeader = "### Result of " + title + " by highest to lowest frequency ###\n\n";
+	    textResultHeader += "Total unique subdomains: " + frequenciesMap.size() + "\n\n";
+        try{
+        	FileUtils.writeStringToFile(file, textResultHeader, false);
+    	}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+        System.out.println("S03 - End printing result header at " + getCurrentTime());
+	    
+	    //Print each subdomain
+        System.out.println("S04 - Start printing result body at " + getCurrentTime());
+	    for (Object d : frequenciesArray) {
+	        Entry<String, Integer> entry = (Map.Entry<String, Integer>) d;
+	        String currentSubdomain = entry.getKey() + ", " + entry.getValue() + "\n";
+            try{
+            	FileUtils.writeStringToFile(file, currentSubdomain, true);
+        	}catch (IOException e){
+    			System.err.println("Caught IOException: " + e.getMessage());
+    		}
+	    }
+	    System.out.println("S04 - End printing result body at " + getCurrentTime());
+	    
+        //Print footer to file
+	    System.out.println("S05 - Start printing result footer at " + getCurrentTime());
+        textResultFooter = "\n" + "----- END OF RESULT -----";
+        try{
+        	FileUtils.writeStringToFile(file, textResultFooter, true);
+        	System.out.println("S05 - End printing result footer at " + getCurrentTime());
+    	}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+	}
+	
+	private static String getCurrentTime(){
+		String timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+		return timeStamp;
+	}
 }
