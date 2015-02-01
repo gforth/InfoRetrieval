@@ -29,7 +29,7 @@ public class Solver {
 		}
     	
 		List domainsList = new ArrayList();
-		String regex = "\\d+";
+		String regex = "(\\d+)(_)(\\d+)";
 		Iterator<String> it = lines.iterator();
 	    while ( it.hasNext() ){
 	    	String currentIt = it.next();
