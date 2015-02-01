@@ -171,29 +171,48 @@ public class Solver {
     	for(int i = 0; i < domainsList.size(); i++){
     		computedDomains.add((String) domainsList.get(i));
     	}
-    	
+
     	//Create result data
-    	String textResult = new String();
+    	String textResultHeader = new String();
+    	String textResultFooter = new String();
+    	
+    	//Create file
+    	File file = new File("answers/result-q2.txt");
     	
     	//Print the size of unique domains
-	    textResult = "### List of unique URLs ###\n\n";
-	    textResult += "Total size of unique URLs: " + computedDomains.size() + "\n\n";
+	    textResultHeader = "### List of unique URLs ###\n\n";
+	    textResultHeader += "Total size of unique URLs: " + computedDomains.size() + "\n\n";
+        try{
+        	FileUtils.writeStringToFile(file, textResultHeader, false);
+    	}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
     	
     	//Print all unique domains
         Iterator<String> sortedDomain = computedDomains.iterator();
+        int j = 1;
         while ( sortedDomain.hasNext() ){
-            textResult += sortedDomain.next() + "\n";
+        	String currentProcessDomain = sortedDomain.next();
+            System.out.println(j + " - " + currentProcessDomain);
+            j++;
+            try{
+            	FileUtils.writeStringToFile(file, currentProcessDomain + "\n", true);
+        	}catch (IOException e){
+    			System.err.println("Caught IOException: " + e.getMessage());
+    		}
         }
-        textResult += "\n" + "----- END OF RESULT -----";
         
-		//Write result to text file
-		try{
-			File file = new File("answers/result-q2.txt");
-			FileUtils.writeStringToFile(file, textResult);
-			System.out.println("Result for Q2 is ready!");
-		}catch (IOException e){
+        //Print footer to file
+        textResultFooter = "\n" + "----- END OF RESULT -----";
+        try{
+        	FileUtils.writeStringToFile(file, textResultFooter, true);
+    	}catch (IOException e){
 			System.err.println("Caught IOException: " + e.getMessage());
-		}	
+		}
+    }
+    
+    public static void computeSubdomain(){
+    	
     }
 
 }
