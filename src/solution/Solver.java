@@ -236,7 +236,7 @@ public class Solver {
 		
 		//Process subdomain of ics.uci.edu
 		List<String> domainsList = new ArrayList<String>();
-		String regex = "^https?://(.*)[.]ics[.]uci[.]edu(.*)";
+		String regex = "^https?://[a-z0-9-_.]*ics[.]uci[.]edu(.*)";
 		Iterator<String> it = lines.iterator();
 	    while ( it.hasNext() ){
 	    	String currentIt = it.next();
