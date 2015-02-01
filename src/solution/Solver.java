@@ -222,7 +222,7 @@ public class Solver {
 		//Read domain list
     	List lines = new ArrayList();
 		try{
-			File file = new File("data/crawl/root/map.txt");
+			File file = new File(targetedFile);
 			lines = FileUtils.readLines(file, "UTF-8");
 		}catch (IOException e){
 			System.err.println("Caught IOException: " + e.getMessage());
@@ -230,12 +230,12 @@ public class Solver {
 		
 		//Process subdomain of ics.uci.edu
 		List domainsList = new ArrayList();
-		String regex = "/https?://([a-z0-9]+[.])*ics.uci[.]edu/g";
+		String regex = "^https?://([a-z0-9]+[.])*ics[.]uci[.]edu(.+)";
 		Iterator<String> it = lines.iterator();
 	    while ( it.hasNext() ){
 	    	String currentIt = it.next();
-	    	if(!currentIt.matches(regex)){
-	    		currentIt = currentIt.split("ics.uci.edu")[0];
+	    	if(currentIt.matches(regex)){
+	    		currentIt = currentIt.split("ics.uci.edu")[0] + "ics.uci.edu";
 	    		domainsList.add(currentIt);
 	    	}
 	    }
@@ -253,8 +253,9 @@ public class Solver {
 				//If there is no token in the hashmap, add new
 				domainsFrequencies.put(currentDomain, 1);
 			}
-
 		}
+		
+		sortByFrequency("Subdomains", domainsFrequencies);
 	    
     }
 
@@ -277,29 +278,46 @@ public class Solver {
 	    });
 	    System.out.println("S02 - End sorting by frequency at " + getCurrentTime());
 	    
-	    //Print sorted Map
-	    String textResult = new String();
-	    System.out.println("S03 - Start preparing result string at " + getCurrentTime());
-	    textResult = "### Result of " + title + " by highest to lowest frequency ###\n\n";
-    	textResult += "Total unique subdomains: " + frequenciesMap.size() + "\n\n";
+	    //Create text result variable
+	    String textResultHeader = new String();
+	    String textResultFooter = new String();
 	    
-	    for (Object e : frequenciesArray) {
-	        Entry<String, Integer> entry = (Map.Entry<String, Integer>) e;
-	        textResult += entry.getKey() + " - " + entry.getValue() + "\n";
-	    }
-	    textResult += "\n----- END OF RESULT -----";
-	    System.out.println("S03 - End preparing result string at " + getCurrentTime());
-	    
-		//Write result to text file
-	    System.out.println("S04 - Start writing result file at " + getCurrentTime());
-		try{
-			File file = new File("result.txt");
-			FileUtils.writeStringToFile(file, textResult);
-			System.out.println("Result is ready!");
-			System.out.println("S04 - End writing result file at " + getCurrentTime());
-		}catch (IOException e){
+    	//Create file
+    	File file = new File("answers/Subdomains.txt");
+
+    	//Print the size of unique subdomains
+	    System.out.println("S03 - Start printing result header at " + getCurrentTime());
+	    textResultHeader = "### Result of " + title + " by highest to lowest frequency ###\n\n";
+	    textResultHeader += "Total unique subdomains: " + frequenciesMap.size() + "\n\n";
+        try{
+        	FileUtils.writeStringToFile(file, textResultHeader, false);
+    	}catch (IOException e){
 			System.err.println("Caught IOException: " + e.getMessage());
-		}	
+		}
+        System.out.println("S03 - End printing result header at " + getCurrentTime());
+	    
+	    //Print each subdomain
+        System.out.println("S04 - Start printing result body at " + getCurrentTime());
+	    for (Object d : frequenciesArray) {
+	        Entry<String, Integer> entry = (Map.Entry<String, Integer>) d;
+	        String currentSubdomain = entry.getKey() + ", " + entry.getValue() + "\n";
+            try{
+            	FileUtils.writeStringToFile(file, currentSubdomain, true);
+        	}catch (IOException e){
+    			System.err.println("Caught IOException: " + e.getMessage());
+    		}
+	    }
+	    System.out.println("S04 - End printing result body at " + getCurrentTime());
+	    
+        //Print footer to file
+	    System.out.println("S05 - Start printing result footer at " + getCurrentTime());
+        textResultFooter = "\n" + "----- END OF RESULT -----";
+        try{
+        	FileUtils.writeStringToFile(file, textResultFooter, true);
+        	System.out.println("S05 - End printing result footer at " + getCurrentTime());
+    	}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
 	}
 	
 	private static String getCurrentTime(){
