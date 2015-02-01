@@ -212,7 +212,46 @@ public class Solver {
     }
     
     public static void computeSubdomain(){
+    	//Configurations
+    	String targetedFile = "answers/result-q2.txt";
     	
+		//Read domain list
+    	List lines = new ArrayList();
+		try{
+			File file = new File("data/crawl/root/map.txt");
+			lines = FileUtils.readLines(file, "UTF-8");
+		}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+		
+		//Process subdomain of ics.uci.edu
+		List domainsList = new ArrayList();
+		String regex = "/https?://([a-z0-9]+[.])*ics.uci[.]edu/g";
+		Iterator<String> it = lines.iterator();
+	    while ( it.hasNext() ){
+	    	String currentIt = it.next();
+	    	if(!currentIt.matches(regex)){
+	    		currentIt = currentIt.split("ics.uci.edu")[0];
+	    		domainsList.add(currentIt);
+	    	}
+	    }
+	    
+	    //Process frequency of subdomain
+	    Map<String, Integer> domainsFrequencies = new HashMap<String, Integer>();
+		for(int i = 0; i < domainsList.size(); i++){
+			String currentDomain = (String) domainsList.get(i);
+			currentDomain = currentDomain;
+			if(domainsFrequencies.containsKey(currentDomain)){
+				int currentFrequency = (int) domainsFrequencies.get(currentDomain);
+				currentFrequency++;
+				domainsFrequencies.put(currentDomain, currentFrequency);
+			}else{
+				//If there is no token in the hashmap, add new
+				domainsFrequencies.put(currentDomain, 1);
+			}
+
+		}
+	    
     }
 
 }
