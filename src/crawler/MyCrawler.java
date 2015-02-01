@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import edu.uci.ics.crawler4j.crawler.Page;
@@ -53,14 +54,15 @@ public class MyCrawler extends WebCrawler {
                     String text = htmlParseData.getText();
                     
                     // store url into mapping file
+                    String currentFileNum = fileNum + "_" + this.getMyId();
+                    fileNum++;
                     String mapPath = this.getMyController().getConfig().getCrawlStorageFolder() + "/" + MAPPING_FILENAME;
-					String filePath = this.getMyController().getConfig().getCrawlStorageFolder() + "/" + fileNum;
+					String filePath = this.getMyController().getConfig().getCrawlStorageFolder() + "/" + currentFileNum;
                     FileWriter fw;
 					try {
 						fw = new FileWriter(mapPath, true);
-	                    fw.write(fileNum + "\n" + url + '\n');
+	                    fw.write(currentFileNum + "\n" + url + '\n');
 	                    fw.close();
-	                    fileNum++;
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
