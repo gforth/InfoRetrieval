@@ -30,7 +30,7 @@ public class Solver {
 //    	computeUniqueDomains();
     	
     	//Q3: Compute subdomain
-    	computeSubdomain();
+//    	computeSubdomain();
     	
     	// Q4:
 //		Map<String, String> map = getFileMapping(rootDirName);
@@ -43,6 +43,9 @@ public class Solver {
 //			Map.Entry<Token, Integer> entry = commonWords.get(i);
 //			System.out.println(entry.getKey().getWord() + " : " + entry.getValue());
 //		}
+    	
+    	//Q6
+    	computeCommon2Grams(rootDirName);
 	}
 	
 	/**
@@ -264,6 +267,36 @@ public class Solver {
 	    
     }
 
+    public static void computeCommon2Grams(String folderName){
+		File[] listOfFiles = new File(folderName).listFiles();
+		List<String> twoGramsList = new ArrayList<String>();
+		
+		for (int i = 0; i < listOfFiles.length; i++) {
+			File file = listOfFiles[i];
+			if (file.isFile() && !file.getName().endsWith(".txt")) {
+			    //Produce 2-gram words from each file
+				List<Token> tokens = Token.tokenizeFile(folderName + "/" + file.getName());
+				for(int j = 0; j < tokens.size() - 1; j++){
+					twoGramsList.add( tokens.get(i).getWord() + " " + tokens.get(i+1).getWord() );
+				}
+			} 
+		}
+
+		//Compute token and its frequency
+		Map<String, Integer> twoGramsFrequencies = new HashMap<String, Integer>();
+		for(int i = 0; i < twoGramsList.size(); i++){
+			if(twoGramsFrequencies.containsKey(twoGramsList.get(i))){
+				int currentFrequency = (int) twoGramsFrequencies.get(twoGramsList.get(i));
+				currentFrequency++;
+				twoGramsFrequencies.put(twoGramsList.get(i), currentFrequency);
+			}else{
+				//If there is no 2 grams in the hashmap, add new
+				twoGramsFrequencies.put(twoGramsList.get(i), 1);
+			}
+		}
+		
+		sortByFrequency("2-Grams Frequencies", twoGramsFrequencies);
+    }
     
 	//*** Supporting methods ***
 	@SuppressWarnings("unchecked")
@@ -288,13 +321,18 @@ public class Solver {
 	    String textResultFooter = new String();
 	    
     	//Create file
-    	File file = new File("answers/Subdomains.txt");
-
+        File file = null;
+	    if(title.equals("Subdomains")){
+	    	file = new File("answers/Subdomains.txt");
+	    }else if(title.equals("2-Grams Frequencies")){
+	    	file = new File("answers/2GramsFrequencies.txt");
+	    }
+    	
     	//Print the size of unique subdomains
 	    System.out.println("S03 - Start printing result header at " + getCurrentTime());
 	    textResultHeader = "### Result of " + title + " by highest to lowest frequency ###\n\n";
-	    textResultHeader += "Total unique subdomains: " + frequenciesMap.size() + "\n\n";
-        try{
+	    textResultHeader += "Total unique size of " + title + ": " + frequenciesMap.size() + "\n\n";
+		try{
         	FileUtils.writeStringToFile(file, textResultHeader, false);
     	}catch (IOException e){
 			System.err.println("Caught IOException: " + e.getMessage());
