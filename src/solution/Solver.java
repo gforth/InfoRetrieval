@@ -37,11 +37,11 @@ public class Solver {
 //		String longestPage = getLongestPage(rootDirName, map);
 		
 		// Q5:
-//		int maxMostCommonWords = 100;
+//		int maxMostCommonWords = 500;
 //		List<Map.Entry<Token, Integer>> commonWords = getMostCommonTokens(rootDirName, map, maxMostCommonWords);
 //		for(int i=0; i<maxMostCommonWords; i++) {
 //			Map.Entry<Token, Integer> entry = commonWords.get(i);
-//			System.out.println(entry.getKey().getWord() + " : " + entry.getValue());
+//			System.out.println("#" + ((int) i+1) + " - " + entry.getKey().getWord() + " - " + entry.getValue());
 //		}
     	
     	//Q6
