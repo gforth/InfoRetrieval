@@ -170,12 +170,15 @@ public class Solver {
 		}
     	
 		List<String> domainsList = new ArrayList<String>();
-		String regex = "(\\d+)(_)(\\d+)";
+		String regexID = "(\\d+)(_)(\\d+)";
+		String regexDomain = "^https?://[a-z0-9-_.]*[.]ics[.]uci[.]edu(.*)";
 		Iterator<String> it = lines.iterator();
 	    while ( it.hasNext() ){
 	    	String currentIt = it.next();
-	    	if(!currentIt.matches(regex)){
-	    		domainsList.add(currentIt);
+	    	if(!currentIt.matches(regexID)){
+	    		if(currentIt.matches(regexDomain)){
+	    			domainsList.add(currentIt);
+	    		}
 	    	}
 	    }
 		
@@ -239,12 +242,12 @@ public class Solver {
 		
 		//Process subdomain of ics.uci.edu
 		List<String> domainsList = new ArrayList<String>();
-		String regex = "^https?://[a-z0-9-_.]*ics[.]uci[.]edu(.*)";
+		String regex = "^https?://[a-z0-9-_.]*[.]ics[.]uci[.]edu(.*)";
 		Iterator<String> it = lines.iterator();
 	    while ( it.hasNext() ){
 	    	String currentIt = it.next();
 	    	if(currentIt.matches(regex)){
-	    		currentIt = currentIt.split("ics.uci.edu")[0] + "ics.uci.edu";
+	    		currentIt = currentIt.split(".ics.uci.edu")[0] + ".ics.uci.edu";
 	    		domainsList.add(currentIt);
 	    	}
 	    }
