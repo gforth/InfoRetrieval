@@ -45,7 +45,7 @@ public class Solver {
 //		}
     	
     	//Q6
-    	computeCommon2Grams(rootDirName);
+//    	computeCommon2Grams(rootDirName);
 	}
 	
 	/**
@@ -277,7 +277,7 @@ public class Solver {
 			    //Produce 2-gram words from each file
 				List<Token> tokens = Token.tokenizeFile(folderName + "/" + file.getName());
 				for(int j = 0; j < tokens.size() - 1; j++){
-					twoGramsList.add( tokens.get(i).getWord() + " " + tokens.get(i+1).getWord() );
+					twoGramsList.add( tokens.get(j).getWord() + " " + tokens.get(j+1).getWord() );
 				}
 			} 
 		}
