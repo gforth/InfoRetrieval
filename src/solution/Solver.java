@@ -271,9 +271,10 @@ public class Solver {
 	    
     }
 
-    public static void computeCommon2Grams(String folderName){
+    public static void computeCommon2Grams(String folderName) throws IOException{
 		File[] listOfFiles = new File(folderName).listFiles();
 		List<String> twoGramsList = new ArrayList<String>();
+		Set<String> stopWords = Utils.getStopWords();
 		
 		for (int i = 0; i < listOfFiles.length; i++) {
 			File file = listOfFiles[i];
@@ -281,7 +282,11 @@ public class Solver {
 			    //Produce 2-gram words from each file
 				List<Token> tokens = Token.tokenizeFile(folderName + "/" + file.getName());
 				for(int j = 0; j < tokens.size() - 1; j++){
-					twoGramsList.add( tokens.get(j).getWord() + " " + tokens.get(j+1).getWord() );
+					//Check for stop words
+					if(stopWords.contains(tokens.get(j).getWord()) || stopWords.contains(tokens.get(j+1).getWord())){
+					}else{
+						twoGramsList.add( tokens.get(j).getWord() + " " + tokens.get(j+1).getWord() );
+					}
 				}
 			} 
 		}
