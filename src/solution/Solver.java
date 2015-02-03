@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 
@@ -266,7 +267,7 @@ public class Solver {
 			}
 		}
 		
-		sortByFrequency("Subdomains", domainsFrequencies);
+		sortByKey("Subdomains", domainsFrequencies);
 	    
     }
 
@@ -324,12 +325,7 @@ public class Solver {
 	    String textResultFooter = new String();
 	    
     	//Create file
-        File file = null;
-	    if(title.equals("Subdomains")){
-	    	file = new File("answers/Subdomains.txt");
-	    }else if(title.equals("2-Grams Frequencies")){
-	    	file = new File("answers/2GramsFrequencies.txt");
-	    }
+        File file = new File("answers/2GramsFrequencies.txt");
     	
     	//Print the size of unique subdomains
 	    System.out.println("S03 - Start printing result header at " + getCurrentTime());
@@ -361,6 +357,56 @@ public class Solver {
         try{
         	FileUtils.writeStringToFile(file, textResultFooter, true);
         	System.out.println("S05 - End printing result footer at " + getCurrentTime());
+    	}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+	}
+	
+	private static void sortByKey(String title, Map<String, Integer> unsortedMap) { 
+    	//Sorting by Key
+    	System.out.println("S01 - Start sorting by key at " + getCurrentTime());
+    	Map<String, Integer> sortedMap = new TreeMap<String, Integer>();
+        sortedMap.putAll(unsortedMap);
+    	System.out.println("S01 - End sorting by key at " + getCurrentTime());
+	    
+	    //Create text result variable
+	    String textResultHeader = new String();
+	    String textResultFooter = new String();
+	    
+    	//Create file
+        File file = new File("answers/Subdomains.txt");
+    	
+    	//Print the size of unique subdomains
+	    System.out.println("S02 - Start printing result header at " + getCurrentTime());
+	    textResultHeader = "### Result of " + title + " by subdomain ###\n\n";
+	    textResultHeader += "Total unique size of " + title + ": " + sortedMap.size() + "\n\n";
+		try{
+        	FileUtils.writeStringToFile(file, textResultHeader, false);
+    	}catch (IOException e){
+			System.err.println("Caught IOException: " + e.getMessage());
+		}
+        System.out.println("S02 - End printing result header at " + getCurrentTime());
+	    
+	    //Print each subdomain
+        System.out.println("S03 - Start printing result body at " + getCurrentTime());
+        for (Map.Entry<String, Integer> entry : sortedMap.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+            String currentSubdomain = key + ", " + value + "\n";
+            try{
+            	FileUtils.writeStringToFile(file, currentSubdomain, true);
+        	}catch (IOException e){
+    			System.err.println("Caught IOException: " + e.getMessage());
+    		}
+        }
+	    System.out.println("S03 - End printing result body at " + getCurrentTime());
+	    
+        //Print footer to file
+	    System.out.println("S04 - Start printing result footer at " + getCurrentTime());
+        textResultFooter = "\n" + "----- END OF RESULT -----";
+        try{
+        	FileUtils.writeStringToFile(file, textResultFooter, true);
+        	System.out.println("S04 - End printing result footer at " + getCurrentTime());
     	}catch (IOException e){
 			System.err.println("Caught IOException: " + e.getMessage());
 		}
