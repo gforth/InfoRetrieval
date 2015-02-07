@@ -45,4 +45,3 @@ public class Controller {
         System.out.println("Total execution time: " + (endTime - startTime)/1000 + " seconds" );
     }
 }
-

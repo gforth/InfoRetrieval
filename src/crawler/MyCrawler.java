@@ -31,10 +31,13 @@ public class MyCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(WebURL url) {
             String href = url.getURL().toLowerCase();
-            return !FILTERS.matcher(href).matches() && href.contains("ics.uci.edu") 
-            		&& !href.contains("calendar.ics.uci.edu")
-            		&& !href.contains("archive.ics.uci.edu")
-            		&& !href.contains("djp3-pc2.ics.uci.edu");
+            return !FILTERS.matcher(href).matches() && href.contains(".ics.uci.edu") 
+            		&& !href.startsWith("http://calendar.ics.uci.edu")
+            		&& !href.startsWith("http://archive.ics.uci.edu")
+            		&& !href.startsWith("http://djp3-pc2.ics.uci.edu")
+            		&& !href.startsWith("http://wics.ics.uci.edu/events")
+            		&& !href.startsWith("http://wics.ics.uci.edu/news")
+            		&& !href.startsWith("http://drzaius.ics.uci.edu/cgi-bin/cvsweb.cgi");
     }
 
     /**
@@ -44,9 +47,9 @@ public class MyCrawler extends WebCrawler {
     @Override
     public void visit(Page page) {          
             String url = page.getWebURL().getURL();
-            int domainStartIdx = url.indexOf("//") + 2;
-            int domainEndIdx = url.indexOf('/', domainStartIdx);
-            String subDomain = url.substring(domainStartIdx, domainEndIdx);
+//            int domainStartIdx = url.indexOf("//") + 2;
+//            int domainEndIdx = url.indexOf('/', domainStartIdx);
+//            String subDomain = url.substring(domainStartIdx, domainEndIdx);
             System.out.println("URL: " + url);
 
             if (page.getParseData() instanceof HtmlParseData) {
@@ -88,4 +91,3 @@ public class MyCrawler extends WebCrawler {
             }
     }
 }
-
